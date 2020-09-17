@@ -1,30 +1,30 @@
 package com.scala.practice
 
-import scala.collection.mutable.ListBuffer
+import scala.annotation.tailrec
 
 object ClimbingTheLeaderBoard {
+
+
+  @tailrec
+  def findRankRec(list: Seq[Int], score:Int, index: Int):Int ={
+    val span: (Seq[Int], Seq[Int]) = list.span(_ == list.head)
+    span match {
+      case (head::_, _) if head == score =>
+        index
+      case (_, left) => findRankRec(left, score, index + 1)
+      case (Nil, Nil) => index
+    }
+  }
+
+  def findRank(scores:List[Int], i:Int): Int ={
+    val list = ( i:: scores ).sorted(Ordering.Int.reverse)
+    findRankRec(list, i,1)
+  }
+
+  // Complete the climbingLeaderboard function below.
   def climbingLeaderboard(scores: Array[Int], alice: Array[Int]): Array[Int] = {
-    /*
-     * Write your code here.
-     */
-
-    /*
-    *
-    *
-    * 7
-    100 100 50 40 40 20 10
-    4
-    5 25 50 120
-    * */
-
-    val list = scores.distinct.clone()
-
-    alice.map(p=>{
-      val z = ListBuffer(list: _ *)
-      z += p
-      z.sortWith(_>_).indexOf(p)+1
-    })
-
+    val list = scores.toList
+    alice.map(score => findRank(list, score))
   }
 
   def main(args: Array[String]) {

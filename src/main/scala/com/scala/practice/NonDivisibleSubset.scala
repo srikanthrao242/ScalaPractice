@@ -3,29 +3,31 @@ package com.scala.practice
 import java.math.BigInteger
 
 import scala.collection.immutable
+import scala.collection.mutable.ListBuffer
 
 object NonDivisibleSubset {
-  /*
-      * Complete the nonDivisibleSubset function below.
-      */
-  def nonDivisibleSubset(k: Int, S: Array[BigInteger]): Int = {
-    /*
-     * Write your code here.
-     */
 
+  def sublistWithNonDiv(k:Int, h:Long, list:List[Long]): List[Long] ={
+    for{
+      a <- list
+      if (h + a) % k != 0
+    } yield a
+  }
 
-    val list = S.combinations(2).filter(a=>{
-      var sum : BigInteger = new BigInteger("0")
-      a.foreach(v=>{
-        sum = sum.add(v)
-      })
-      var s: Array[BigInteger] = sum.divideAndRemainder(new BigInteger(k+""))
-      sum.mod(new BigInteger(k+"")) != new BigInteger("0")
-    }).flatten.toList
-    list.groupBy(identity).foreach(v=>println(v._2.mkString(" ")))
-    //list.groupBy(identity).filter(v => list.length % v._2.length == 0).foreach(v=>println(v._2.mkString(" ")))
+  def listOfSubLists(k:Int, list:List[Long], result:List[List[Long]], size:Int): Int ={
+    list match {
+      case a :: tail =>
+        val re = a :: sublistWithNonDiv(k,a,tail)
+        println(re.distinct, re.distinct.size)
+        val s = if (re.size > size) {re.size} else {size}
+        listOfSubLists(k, tail, re::result, s)
+      case Nil => size
+    }
+  }
 
-    list.distinct.size
+  def nonDivisibleSubset(k: Int, s: Array[Long]): Int = {
+    // Write your code here
+    listOfSubLists(k, s.toList, Nil, 0)
   }
 
   def main(args: Array[String]) {
@@ -39,7 +41,7 @@ object NonDivisibleSubset {
 
     val k = nk(1).trim.toInt
 
-    val S = stdin.readLine.split(" ").map(v=> new BigInteger(v.trim))
+    val S = stdin.readLine.split(" ").map(v=> v.trim.toLong)
     val result = nonDivisibleSubset(k, S)
 
     println(result)
