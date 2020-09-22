@@ -1,11 +1,9 @@
 package com.scala.practice;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class CaesarCiphar {
 
@@ -396,6 +394,111 @@ public class CaesarCiphar {
         }
     }
 
+    static void closestNum(int[] arr){
+        StringBuilder result = new StringBuilder();
+        int lowDiff = Integer.MIN_VALUE;
+        for(int i=0;i<arr.length-1;i++){
+            int diff = Math.abs(arr[i]- arr[i+1]);
+            if(diff < lowDiff){
+                lowDiff = diff;
+                result = new StringBuilder();
+                result.append("" + arr[i] + " "+ arr[i+1]);
+            }else if(diff == lowDiff){
+                result.append("" + arr[i] + " "+ arr[i+1]);
+            }
+        }
+        System.out.println(result.toString());
+    }
+
+    static int activityNotifications(int[] expenditure, int d) {
+        int n = expenditure.length;
+        int notifications = 0;
+        for(int i=0;i<n-d-2;n++){
+            int[] sortedArr = Arrays.copyOfRange(expenditure, i, i + d - 1);
+            Arrays.sort(sortedArr);
+            int median = sortedArr[d/2];
+            int nextSpent = expenditure[i+1];
+            if(nextSpent >= 2*median){
+                notifications++;
+            }
+        }
+        return notifications;
+    }
+
+    static void icecreamParlor(int m, int[] arr) {
+        Map<Integer, Integer> complements = new HashMap<>();
+        for(int i=0;i<arr.length;i++){
+            if(complements.containsKey(arr[i])){
+                System.out.println(complements.get(arr[i])+ " "+ i);
+            }else{
+                complements.put(m-arr[i], i);
+            }
+        }
+    }
+
+    static boolean contains(int[] arr, int k){
+        for(int v: arr){
+            if(v == k){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static int hackerlandRadioTransmitters(int[] x, int k) {
+        Arrays.sort(x);
+        int counter = 0;
+        int i = 0;
+        while (i < x.length) {
+            counter++;
+            int leftStartingPoint = i;
+            while((i + 1 < x.length) && (x[i + 1] - x[leftStartingPoint] <= k)) { i++; }
+            int middlePoint = i;
+            while((i + 1 < x.length) && (x[i + 1] - x[middlePoint] <= k)) { i++; }
+            i++;
+        }
+
+        return counter;
+    }
+
+
+    static int[] countingSort(int n, int[] arr) {
+        int[] frequencies = new int[100];
+        for(int i = 0; i < n; i++){
+            int num = arr[i];
+            frequencies[num] = frequencies[num] + 1;
+        }
+        return frequencies;
+    }
+
+    static int[] countingSort2(int[] arr) {
+        int[] frequencies = countingSort(arr.length, arr);
+        int[] result = new int[100];
+        for(int i =0;i<100;i++){
+            int val = frequencies[i];
+            int j =0;
+            if(val != 0){
+                while(j < val){
+                    result[j] = i;
+                    j++;
+                }
+            }
+            i = i+j;
+        }
+        return result;
+    }
+
+    static int minimumAbsoluteDifference(int[] arr) {
+        Arrays.sort(arr);
+        int n = arr.length;
+        int min = Integer.MAX_VALUE;
+        for(int i = 0; i < n-1; i++)
+        {
+            int currentMin = Math.abs(arr[i]-arr[i+1]);
+            min = Math.min(min, currentMin);
+        }
+        return min;
+    }
 
     public static void main(String[] args){
         //weightedUniformStrings("abccddde", new int[]{6,1,3,12,5,9,10});
